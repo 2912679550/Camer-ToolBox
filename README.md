@@ -4,6 +4,13 @@
 
 kalibr参考博客：[Ubuntu20.04安装kalibr-CSDN博客](https://blog.csdn.net/xiaojinger_123/article/details/121292803)
 
+先安装前置依赖：
+
+```shell
+sudo apt-get install python3-setuptools python3-rosinstall ipython3 libeigen3-dev libboost-all-dev doxygen libopencv-dev ros-noetic-vision-opencv ros-noetic-image-transport-plugins ros-noetic-cmake-modules python3-software-properties software-properties-common libpoco-dev python3-matplotlib python3-scipy python3-git python3-pip libtbb-dev libblas-dev liblapack-dev libv4l-dev python3-catkin-tools python3-igraph libsuitesparse-dev 
+pip3 install wxPython
+```
+
 由于整合了kalibr，所以需要使用 `catkin build`进行编译，整合后在工作空间下需要执行的编译流程为：
 
 ```shell
