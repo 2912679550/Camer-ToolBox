@@ -26,7 +26,11 @@ include_directories(
     ${catkin_INCLUDE_DIRS}
     ${EIGEN3_INCLUDE_DIR}
      )
-include_directories("include")
+
+include_directories(
+    include
+    include/code_utils
+    )
 
 add_library(polynomial STATIC
     src/math_utils/Polynomial.cpp)
