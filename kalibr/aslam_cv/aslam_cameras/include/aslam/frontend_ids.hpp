@@ -15,7 +15,7 @@ SM_DEFINE_ID (LandmarkId);
 // These macros specialize std::tr1::hash for 
 // The id types. They must be defined outside
 // of a namespace.
-SM_DEFINE_ID_HASH (aslam::MultiFrameId);
+SM_DEFINE_ID_HASH (aslam::MultiFrameId); 
 SM_DEFINE_ID_HASH (aslam::FrameId);
 SM_DEFINE_ID_HASH (aslam::LandmarkId);
 

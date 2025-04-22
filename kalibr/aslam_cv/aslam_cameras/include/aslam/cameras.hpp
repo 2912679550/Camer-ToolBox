@@ -11,7 +11,7 @@
 #include <aslam/cameras/DoubleSphereProjection.hpp>
 #include <aslam/cameras/DepthProjection.hpp>
 
-// Distortion models
+// Distortion models 
 #include <aslam/cameras/NoDistortion.hpp>
 #include <aslam/cameras/RadialTangentialDistortion.hpp>
 #include <aslam/cameras/EquidistantDistortion.hpp>

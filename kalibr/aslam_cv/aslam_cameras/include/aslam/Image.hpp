@@ -17,7 +17,7 @@ class Image {
 
   SM_DEFINE_EXCEPTION(RTException, std::runtime_error);SM_DEFINE_EXCEPTION(IndexOutOfBoundsException, RTException);
 
-  Image(int octaves = 1);
+  Image(int octaves = 1); 
   virtual ~Image();
 
   size_t numOctaves() const;

@@ -7,7 +7,7 @@
 namespace aslam {
 
 struct BackProjection {
-  EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+  EIGEN_MAKE_ALIGNED_OPERATOR_NEW 
 
   /// \brief initialize both to zero with zero uncertainty
   BackProjection();

@@ -15,7 +15,7 @@ namespace aslam {
 
 struct KeypointIdentifier;
 namespace cameras {
-class CameraGeometryBase;
+class CameraGeometryBase; 
 }  // namespace cameras
 
 class FrameBase {

@@ -12,7 +12,7 @@
 #define ASLAM_DESCRIPTOR_HPP
 
 #include <sm/boost/serialization.hpp>
-#include <boost/serialization/export.hpp>
+#include <boost/serialization/export.hpp> 
 #include <boost/shared_ptr.hpp>
 
 namespace aslam {
