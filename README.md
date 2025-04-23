@@ -11,7 +11,15 @@ sudo apt-get install python3-setuptools python3-rosinstall ipython3 libeigen3-de
 pip3 install wxPython
 ```
 
-由于整合了kalibr，所以需要使用 `catkin build`进行编译，整合后在工作空间下需要执行的编译流程为：
+未整合了kalibr，所以需要另行创建工作空间使用 `catkin build`进行编译：
+
+```shell
+mkdir ~/kalibr_ws/src
+cd ~/kalibr_ws/src
+git clone --recursive https://github.com/ori-drs/kalibr
+```
+
+整合后在工作空间下需要执行的编译流程为：
 
 ```shell
 catkin init
