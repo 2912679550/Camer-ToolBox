@@ -1,48 +1,74 @@
 # 工具包使用与编译
 
-## 工具包编译
-
-kalibr参考博客：[Ubuntu20.04安装kalibr-CSDN博客](https://blog.csdn.net/xiaojinger_123/article/details/121292803)
-
-先安装前置依赖：
-
-```shell
-sudo apt-get install python3-setuptools python3-rosinstall ipython3 libeigen3-dev libboost-all-dev doxygen libopencv-dev ros-noetic-vision-opencv ros-noetic-image-transport-plugins ros-noetic-cmake-modules python3-software-properties software-properties-common libpoco-dev python3-matplotlib python3-scipy python3-git python3-pip libtbb-dev libblas-dev liblapack-dev libv4l-dev python3-catkin-tools python3-igraph libsuitesparse-dev 
-pip3 install wxPython
-```
-
-未整合了kalibr，所以需要另行创建工作空间使用 `catkin build`进行编译：
-
-```shell
-mkdir ~/kalibr_ws/src
-cd ~/kalibr_ws/src
-git clone --recursive https://github.com/ori-drs/kalibr
-```
-
-整合后在工作空间下需要执行的编译流程为：
-
-```shell
-catkin init
-catkin config --extend /opt/ros/noetic
-catkin config --merge-devel # Necessary for catkin_tools >= 0.4.
-catkin config --cmake-args -DCMAKE_BUILD_TYPE=Release
-
-catkin build -DCMAKE_BUILD_TYPE=Release -j4
-```
-
-在src中我也预留了一个供编译用的脚本，在工作空间根目录执行 `./src/autoBuild.sh`即可。
-
 ## 标定IMU
 
 标定imu的零偏和白噪声主要使用 `imu_utils`工具包，该工具包的编译需要依赖于 `code_utils`功能包，所以两个包不能同时在工作空间中使用 `catkin_make`来编译，最朴实的做法就是先将 `imu_utils`功能包压缩，使用 `catkin_make`编译工作空间，然后再解压 `imu_utils`，在使用 `catkin_make`编译一次即可。
 
-## 相机标定
+## 编译中遇到的问题
 
-### 使用过程：
+### code_utils与imu_utils联合编译
 
+**报错1**：
+
+```shell
+Could not find a package configuration file provided by “code_utils” with
+any of the following names:
+code_utilsConfig.cmake
+code_utils-config.cmake
 ```
-source ~/kalibr_workspace/devel/setup.bash
-rosrun kalibr kalibr_calibrate_cameras --bag Kalib_data_vga.bag --topics /zed2/zed_node/left/image_rect_color2 /zed2/zed_node/right/image_rect_color2 --models pinhole-radtan pinhole-radtan --target april.yaml
+
+解决方案：[imu_utils协方差标定包编译](https://blog.csdn.net/m0_38144614/article/details/116293420)，本质上就是现将imu包压缩起来，单独编译code包
+
+**报错2**：
+
+```shell
+: fatal error: backward.hpp: 没有那个文件或目录     2 | #include "backward.hpp"
 ```
 
-1
+这里是缺少了一个cpp的库文件，安装该文件参考：[backwaer.cpp安装](https://zhuanlan.zhihu.com/p/397148839).具体的安装操作为：
+
+```shell
+sudo apt-get install libdw-dev
+wget https://raw.githubusercontent.com/bombela/backward-cpp/master/backward.hpp
+sudo mv backward.hpp /usr/include
+```
+
+**报错3**：一批CV库中的宏名称问题：
+OpenCV 3.0及以上版本中，`CV_LOAD_IMAGE_UNCHANGED` 和 `CV_LOAD_IMAGE_GRAYSCALE` 已被弃用，应该使用 `IMREAD_UNCHANGED` 和 `IMREAD_GRAYSCALE`。`CV_MINMAX` 已被弃用，应该使用 `NORM_MINMAX`。
+
+### imu_utils继续编译
+
+**报错1**：
+
+```cpp
+/home/vulcan/personLibs/cam_cali_tools/src/imu_utils/src/imu_an.cpp:68:19: error: aggregate ‘std::ofstream out_t’ has incomplete type and cannot be defined
+   68 |     std::ofstream out_t;
+      |                   ^~~~~
+/home/vulcan/personLibs/cam_cali_tools/src/imu_utils/src/imu_an.cpp:69:19: error: aggregate ‘std::ofstream out_x’ has incomplete type and cannot be defined
+   69 |     std::ofstream out_x;
+      |                   ^~~~~
+/home/vulcan/personLibs/cam_cali_tools/src/imu_utils/src/imu_an.cpp: In function ‘void writeData3(std::string, const std::vector<double>&, const std::vector<double>&, const std::vector<double>&, const std::vector<double>&)’:
+/home/vulcan/personLibs/cam_cali_tools/src/imu_utils/src/imu_an.cpp:90:19: error: aggregate ‘std::ofstream out_t’ has incomplete type and cannot be defined
+   90 |     std::ofstream out_t;
+      |                   ^~~~~
+/home/vulcan/personLibs/cam_cali_tools/src/imu_utils/src/imu_an.cpp:91:19: error: aggregate ‘std::ofstream out_x’ has incomplete type and cannot be defined
+   91 |     std::ofstream out_x;
+      |                   ^~~~~
+/home/vulcan/personLibs/cam_cali_tools/src/imu_utils/src/imu_an.cpp:92:19: error: aggregate ‘std::ofstream out_y’ has incomplete type and cannot be defined
+   92 |     std::ofstream out_y;
+      |                   ^~~~~
+/home/vulcan/personLibs/cam_cali_tools/src/imu_utils/src/imu_an.cpp:93:19: error: aggregate ‘std::ofstream out_z’ has incomplete type and cannot be defined
+   93 |     std::ofstream out_z;
+```
+
+解决方案，在报错的cpp文件开头补充库文件引用：
+
+```cpp
+#include <fstream>
+#include <vector>
+#include <string>
+```
+
+## camera_tools工具包
+
+编写了一个简易的可以捕获ros中 `sensor_msgs::Image`类型的图像数据的工具包，用于直接接收相机ros节点发出的图像数据，并可以使用按键控制进行图像保存。

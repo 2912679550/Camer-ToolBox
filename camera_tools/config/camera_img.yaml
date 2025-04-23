@@ -1,0 +1,7 @@
+img_topic: "/camera/color/image_raw"
+
+image_width: 640
+image_height: 480
+image_hz: 30.0
+
+save_path: "/home/vulcan/Robot_locate/CAM_CALI/src/camera_tools/figure"

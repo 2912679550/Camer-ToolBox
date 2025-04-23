@@ -7,8 +7,11 @@
       },
       "includePath": [
         "/opt/ros/noetic/include/**",
-        "/home/vulcan/105/CAM_CALI/src/code_utils/include/**",
-        "/usr/include/**"
+        "${workspaceFolder}/code_utils/include/**",
+        "${workspaceFolder}/camera_tools/include/",
+        "${workspaceFolder}/../devel/include",
+        "/usr/include/eigen3",
+        "/usr/include/opencv4",
       ],
       "name": "ROS",
       "intelliSenseMode": "gcc-x64",

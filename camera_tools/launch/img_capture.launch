@@ -1,0 +1,7 @@
+<launch>
+    <!-- 加载参数 -->
+    <rosparam file="$(find camera_tools)/config/camera_img.yaml" command="load"/>
+
+    <!-- 启动节点 -->
+    <node pkg="camera_tools" type="image_capture_node" name="image_capture_node" output="screen"/>
+</launch>
